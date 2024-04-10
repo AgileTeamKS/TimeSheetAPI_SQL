@@ -22,7 +22,8 @@ namespace Timesheet.API.Controllers.Master
             Mapper = mapper;
         }
 
-        [HttpGet, Authorize]
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult List()
