@@ -96,7 +96,6 @@ namespace Timesheet.Repository.Repository.Auth
                 claims: userClaims,
                 expires: DateTime.Now.AddDays(1),
                 signingCredentials: credentials
-    
                 );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
