@@ -2,8 +2,8 @@
 {
     public class AuthResponse
     {
-        public record class GeneralResponse(bool Flag, string Message);
+        public record class GeneralResponse(bool flag, string message);
 
-        public record class LoginResponse(bool Flag, string Token, string Message);
+        public record class LoginResponse(bool flag, string token, string message);
     }
 }
