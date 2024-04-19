@@ -7,14 +7,22 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Mvc;
+using Timesheet.Models.Common;
+using System.Data.SqlClient;
+using System.Data;
+using Timesheet.DAL;
+using Timesheet.Models.Masters.Employee;
+using Dapper;
 
 namespace Timesheet.Repository.Repository.Auth
 {
-    public class AccountRepository(UserManager<AppUser> _userManager, RoleManager<IdentityRole> _roleManager, IConfiguration _configuration) : IUserAccount
+    public class AccountRepository(UserManager<AppUser> _userManager, RoleManager<IdentityRole> _roleManager, IConfiguration _configuration, AppConnectionString _appConnectionString) : IUserAccount
     {
         private readonly UserManager<AppUser> userManager = _userManager;
         private readonly RoleManager<IdentityRole> roleManager = _roleManager;
         private readonly IConfiguration configuration = _configuration;
+        private readonly AppConnectionString appConnectionString = _appConnectionString;
 
         public async Task<GeneralResponse> CreateAccount(UserDTO userDTO)
         {
@@ -31,24 +39,25 @@ namespace Timesheet.Repository.Repository.Auth
 
             var createUser = await userManager.CreateAsync(newUser!, userDTO.Password);
             if (!createUser.Succeeded) return new GeneralResponse(false, "Enter Appropriate Password");
-
-            var userRole = await roleManager.FindByNameAsync("Admin");
-            if (userRole is null)
-            {
-                await roleManager.CreateAsync(new IdentityRole() { Name = "Admin" });
-                await userManager.AddToRoleAsync(newUser, "Admin");
-                return new GeneralResponse(true, "Account created successfully");
-            }
-            else
-            {
-                var checkUser = await roleManager.FindByNameAsync("User");
-                if (checkUser is null)
-                { 
-                    await roleManager.CreateAsync(new IdentityRole() { Name = "User" }); 
-                }
-                await userManager.AddToRoleAsync(newUser, "User");
-                return new GeneralResponse(true, "Account created successfully");
-            }
+            /*
+                        var userRole = await roleManager.FindByNameAsync("Admin");
+                        if (userRole is null)
+                        {
+                            await roleManager.CreateAsync(new IdentityRole() { Name = "Admin" });
+                            await userManager.AddToRoleAsync(newUser, "Admin");
+                            return new GeneralResponse(true, "Account created successfully");
+                        }
+                        else
+                        {
+                            var checkUser = await roleManager.FindByNameAsync("User");
+                            if (checkUser is null)
+                            { 
+                                await roleManager.CreateAsync(new IdentityRole() { Name = "User" }); 
+                            }
+                            await userManager.AddToRoleAsync(newUser, "User");
+                            return new GeneralResponse(true, "Account created successfully");
+                        }*/
+            return new GeneralResponse(true, "Account created successfully");
         }
 
         public async Task<LoginResponse> LoginAccount(LoginDTO loginDTO)
@@ -99,6 +108,42 @@ namespace Timesheet.Repository.Repository.Auth
                 );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public async Task<GeneralResponse> CreateRole(RoleDTO roleDTO)
+        {
+            if (roleDTO == null) return new GeneralResponse(false, "Role name cannot be empty");
+
+            var newRole = new RoleDTO()
+            {
+                Name = roleDTO.Name,
+            };
+            var role = await roleManager.FindByNameAsync(newRole.Name);
+            if (role is not null) return new GeneralResponse(false, "This Role already exists!");
+
+            await roleManager.CreateAsync(new IdentityRole() { Name = newRole.Name });
+            return new GeneralResponse(true, "Role created succesfully");
+        }
+
+        public RoleDTOResponse List(string userName)
+        {
+            RoleDTOResponse response = new RoleDTOResponse();
+            using (IDbConnection cnn = new SqlConnection(appConnectionString.ConnectionString))
+            {
+                var result = cnn.QueryMultiple("Role_List_Admin", new { UserName = userName }, null, null, CommandType.StoredProcedure);
+                if (!result.IsConsumed)
+                {
+                    response.DataUpdateResponse = result.Read<DataUpdateResponse>().FirstOrDefault();
+                }
+                if (response.DataUpdateResponse!.Status)
+                {
+                    if (!result.IsConsumed)
+                    {
+                        response.RoleList = result.Read<RoleResponse>().ToList();
+                    }
+                }
+            }
+            return response;
         }
     }
 }
