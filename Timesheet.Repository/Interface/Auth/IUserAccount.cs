@@ -16,5 +16,7 @@ namespace Timesheet.Repository.Interface.Auth
 
         RoleDTOResponse List(string userName);
 
+        RoleDTOResponseList RoleList(string userName);
+
     }
 }

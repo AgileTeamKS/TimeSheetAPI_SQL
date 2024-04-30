@@ -3,11 +3,11 @@ using Timesheet.Models.Common;
 
 namespace Timesheet.Models.Auth
 {
-    public class RoleDTOResponse
+    public class RoleDTOResponseList
     {
         public DataUpdateResponse? DataUpdateResponse { get; set; }
 
-        public List<RoleResponse>? RoleList { get; set; }
+        public List<RoleResponseList>? RoleResponseList { get; set; }
         public override string ToString()
         {
             if (this.DataUpdateResponse == null)
@@ -19,16 +19,17 @@ namespace Timesheet.Models.Auth
             {
                 return status;
             }
-            status += $"Role List Count:{this.RoleList?.Count}";
+            status += $"Role List Count:{this.RoleResponseList?.Count}";
             return status;
         }
 
     }
 
-    public class RoleResponse
+    public class RoleResponseList
     {
-        public string UserName { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
+        public int TotalUsers { get; set; }
         public override string ToString()
         {
             return JsonConvert.SerializeObject(this);

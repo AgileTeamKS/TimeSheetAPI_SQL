@@ -39,24 +39,24 @@ namespace Timesheet.Repository.Repository.Auth
 
             var createUser = await userManager.CreateAsync(newUser!, userDTO.Password);
             if (!createUser.Succeeded) return new GeneralResponse(false, "Enter Appropriate Password");
-            /*
-                        var userRole = await roleManager.FindByNameAsync("Admin");
-                        if (userRole is null)
-                        {
-                            await roleManager.CreateAsync(new IdentityRole() { Name = "Admin" });
-                            await userManager.AddToRoleAsync(newUser, "Admin");
-                            return new GeneralResponse(true, "Account created successfully");
-                        }
-                        else
-                        {
-                            var checkUser = await roleManager.FindByNameAsync("User");
-                            if (checkUser is null)
-                            { 
-                                await roleManager.CreateAsync(new IdentityRole() { Name = "User" }); 
-                            }
-                            await userManager.AddToRoleAsync(newUser, "User");
-                            return new GeneralResponse(true, "Account created successfully");
-                        }*/
+
+            var userRole = await roleManager.FindByNameAsync("Admin");
+            if (userRole is null)
+            {
+                await roleManager.CreateAsync(new IdentityRole() { Name = "Admin" });
+                await userManager.AddToRoleAsync(newUser, "Admin");
+                return new GeneralResponse(true, "Account created successfully");
+            }
+            else
+            {
+                var checkUser = await roleManager.FindByNameAsync("User");
+                if (checkUser is null)
+                {
+                    await roleManager.CreateAsync(new IdentityRole() { Name = "User" });
+                }
+                await userManager.AddToRoleAsync(newUser, "User");
+                return new GeneralResponse(true, "Account created successfully");
+            }
             return new GeneralResponse(true, "Account created successfully");
         }
 
@@ -140,6 +140,27 @@ namespace Timesheet.Repository.Repository.Auth
                     if (!result.IsConsumed)
                     {
                         response.RoleList = result.Read<RoleResponse>().ToList();
+                    }
+                }
+            }
+            return response;
+        }
+
+        public RoleDTOResponseList RoleList(string userName)
+        {
+            RoleDTOResponseList response = new RoleDTOResponseList();
+            using (IDbConnection cnn = new SqlConnection(appConnectionString.ConnectionString))
+            {
+                var result = cnn.QueryMultiple("Role_List_Admin_Count", new { UserName = userName }, null, null, CommandType.StoredProcedure);
+                if (!result.IsConsumed)
+                {
+                    response.DataUpdateResponse = result.Read<DataUpdateResponse>().FirstOrDefault();
+                }
+                if (response.DataUpdateResponse!.Status)
+                {
+                    if (!result.IsConsumed)
+                    {
+                        response.RoleResponseList = result.Read<RoleResponseList>().ToList();
                     }
                 }
             }

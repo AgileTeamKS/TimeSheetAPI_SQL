@@ -49,5 +49,16 @@ namespace Timesheet.API.Controllers.Auth
             var response = userAccount.List(userName);
             return Ok(response);
         }
+
+        [HttpGet("rolelist")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public IActionResult RoleList()
+        {
+            string userName = "Admin";
+            var response = userAccount.RoleList(userName);
+            return Ok(response);
+        }
+
     }
 }
