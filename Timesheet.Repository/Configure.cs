@@ -14,6 +14,7 @@ namespace Timesheet.Repository
             //Authenticate Repository and Token options as dependency injection
             services.AddScoped<IEmployee, EmployeeRepository>();
             services.AddScoped<IUserAccount, AccountRepository>();
+            services.AddScoped<ILookup, LookupRepository>();
         }
     }
 }
