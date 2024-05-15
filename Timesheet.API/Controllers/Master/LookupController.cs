@@ -19,7 +19,6 @@ namespace Timesheet.API.Controllers.Master
         public IActionResult List()
         {
             string userName = "Admin";
-            string ipAddress = "::1";
             logger.LogInformation($"Request:User:{userName}");
             var result = lookup.List(userName);
             return Ok(result);
@@ -78,7 +77,6 @@ namespace Timesheet.API.Controllers.Master
         public IActionResult DeletedList()
         {
             string userName = "Admin";
-            string ipAddress = "::1";
             logger.LogInformation($"|Request: User:{userName}");
             var result = lookup.DeletedList(userName);
             return Ok(result);
