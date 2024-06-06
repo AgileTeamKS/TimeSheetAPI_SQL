@@ -10,7 +10,7 @@ namespace Timesheet.Models.Masters.Employee
     public class EmployeeDeletedDTOResponse
     {
         public DataUpdateResponse? DataUpdateResponse { get; set; }
-        public List<EmployeeDTOList>? EmployeeList { get; set; }
+        public List<EmployeeDTOList>? EmployeeDeletedList { get; set; }
 
         public override string ToString()
         {
@@ -23,7 +23,7 @@ namespace Timesheet.Models.Masters.Employee
             {
                 return status;
             }
-            status += $"Deleted Employee List Count:{this.EmployeeList?.Count}";
+            status += $"Deleted Employee List Count:{this.EmployeeDeletedList?.Count}";
             return status;
         }
     }

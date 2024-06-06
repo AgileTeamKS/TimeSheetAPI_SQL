@@ -1,5 +1,6 @@
 using AutoMapper;
 using Timesheet.Models.Masters.Employee;
+using Timesheet.Models.Masters.EmployeeCalendar;
 using Timesheet.Models.Masters.Lookup;
 
 namespace Timesheet.API.AutoMapperProfile
@@ -12,6 +13,8 @@ namespace Timesheet.API.AutoMapperProfile
             CreateMap<EmployeeDTOEdit, EmployeeDTOEditDB>();
             CreateMap<LookupDTOAdd,  LookupDTOAddDB>();
             CreateMap<LookupDTOEdit, LookupDTOEditDB>();
+            CreateMap<EmployeeCalendarDTOAdd, EmployeeCalendarDTOAddDB>();
+            CreateMap<EmployeeCalendarDTOEdit, EmployeeCalendarDTOEditDB>();
         }
     }
 }

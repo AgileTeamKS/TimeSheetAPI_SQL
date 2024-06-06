@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using Timesheet.Models.Masters.Lookup;
 using Timesheet.Repository.Interface.Master;
 
@@ -79,6 +80,22 @@ namespace Timesheet.API.Controllers.Master
             string userName = "Admin";
             logger.LogInformation($"|Request: User:{userName}");
             var result = lookup.DeletedList(userName);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("{tagName}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public IActionResult LookupGetByTagName(string tagName)
+        {
+            string userName = "Admin";
+            string ipAddress = "::1";
+
+            logger.LogInformation($"|Request: User:{userName}, IP:{ipAddress}, TagName: {tagName}");
+            var result = lookup.LookupGetByTagName(tagName, userName);
+            logger.LogInformation($"|Result: {result}");
+
             return Ok(result);
         }
     }

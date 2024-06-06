@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using Timesheet.DAL;
 using Timesheet.Models.Common;
 using Timesheet.Models.Masters.Lookup;
+using Timesheet.Models.Masters.LookupMaster;
 using Timesheet.Repository.Interface.Master;
 
 namespace Timesheet.Repository.Repository.Master
@@ -96,13 +97,32 @@ namespace Timesheet.Repository.Repository.Master
             using (IDbConnection connection = new SqlConnection(appConnectionString.ConnectionString))
             {
                 var result = connection.QueryMultiple("LookupMaster_Deleted_List_Admin", new { UserName = userName }, null, null, CommandType.StoredProcedure);
-                if (!result.IsConsumed && response.DataUpdateResponse!.Status)
+                if (!result.IsConsumed )
                 {
                     response.DataUpdateResponse = result.Read<DataUpdateResponse>().FirstOrDefault();
                 }
                 if (response.DataUpdateResponse!.Status)
                 { 
                     response.LookupList = result.Read<LookupDTOList>().ToList();
+                }
+            }
+            return response;
+        }
+
+        public LookupGetByTagNameDTOResponse LookupGetByTagName(string tagName, string userName)
+        {
+            LookupGetByTagNameDTOResponse response = new LookupGetByTagNameDTOResponse();
+            
+            using(IDbConnection connection = new SqlConnection(appConnectionString.ConnectionString))
+            {
+                var result = connection.QueryMultiple("LookupValues_GetByTagName_Admin", new { TagName = tagName }, null, null, CommandType.StoredProcedure);
+                if(!result.IsConsumed)
+                {
+                    response.DataUpdateResponse = result.Read<DataUpdateResponse>().FirstOrDefault();
+                }
+                if(response.DataUpdateResponse!.Status)
+                {
+                    response.LookupGetByTagNameList = result.Read<LookupGetByTagNameDTOList>().ToList();
                 }
             }
             return response;

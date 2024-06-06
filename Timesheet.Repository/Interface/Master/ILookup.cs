@@ -1,4 +1,5 @@
 ﻿using Timesheet.Models.Masters.Lookup;
+using Timesheet.Models.Masters.LookupMaster;
 
 namespace Timesheet.Repository.Interface.Master
 {
@@ -9,6 +10,6 @@ namespace Timesheet.Repository.Interface.Master
         LookupDetailDTOResponse Edit(LookupDTOEditDB lookupDTOEditDB);
         LookupDetailDTOResponse Detail(int lookupId, string userName);
         LookupDeletedDTOResponse DeletedList(string userName);
-         
+        LookupGetByTagNameDTOResponse LookupGetByTagName(string tagName, string userName);
     }
 }

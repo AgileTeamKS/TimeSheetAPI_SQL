@@ -128,7 +128,7 @@ namespace Timesheet.Repository.Repository.Master
                 }
                 if (response.DataUpdateResponse!.Status && !result.IsConsumed)
                 {
-                    response.EmployeeList = result.Read<EmployeeDTOList>().ToList();
+                    response.EmployeeDeletedList = result.Read<EmployeeDTOList>().ToList();
                 }
             }
             return response;
