@@ -28,6 +28,11 @@ namespace Timesheet.API.Controllers.Master
             string userName = "Admin";
             string ipAddress = "::1";
 
+            employeeCalendarDTOAdd.CalendarDate.ToUniversalTime();
+            employeeCalendarDTOAdd.StartTime.ToUniversalTime();
+            employeeCalendarDTOAdd.EndTime.ToUniversalTime();
+
+
             EmployeeCalendarDTOAddDB employeeCalendarDTOAddDB = mapper.Map<EmployeeCalendarDTOAddDB>(employeeCalendarDTOAdd);
             employeeCalendarDTOAddDB.CreatedByIpAddress = ipAddress;
             employeeCalendarDTOAddDB.CreatedBy = userName;
@@ -44,6 +49,10 @@ namespace Timesheet.API.Controllers.Master
         {
             string userName = "Admin";
             string ipAddress = "::1";
+
+/*            employeeCalendarDTOEdit.CalendarDate.ToUniversalTime();
+            employeeCalendarDTOEdit.StartTime.ToUniversalTime();
+            employeeCalendarDTOEdit.EndTime.ToUniversalTime();*/
 
             EmployeeCalendarDTOEditDB employeeCalendarDTOEditDB = mapper.Map<EmployeeCalendarDTOEditDB>(employeeCalendarDTOEdit);
             employeeCalendarDTOEditDB.ModifiedBy = userName;

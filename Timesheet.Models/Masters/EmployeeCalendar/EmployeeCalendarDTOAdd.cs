@@ -4,11 +4,11 @@ namespace Timesheet.Models.Masters.EmployeeCalendar
 {
     public class EmployeeCalendarDTOAdd
     {
-        public int CalendarId { get; set; }
+        public DateTime CalendarDate { get; set; }
         public int ProjectId { get; set; }
         public int WorkTypeId { get; set; }
-        public decimal StartTime { get; set; }
-        public decimal EndTime { get; set; }
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
         public int TotalTime { get; set; }
         public string? Description { get; set; }
         public override string ToString()
