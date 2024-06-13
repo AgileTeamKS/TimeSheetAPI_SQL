@@ -28,10 +28,13 @@ namespace Timesheet.API.Controllers.Master
             string userName = "Admin";
             string ipAddress = "::1";
 
-            employeeCalendarDTOAdd.CalendarDate.ToUniversalTime();
-            employeeCalendarDTOAdd.StartTime.ToUniversalTime();
-            employeeCalendarDTOAdd.EndTime.ToUniversalTime();
+            var calendarDate = employeeCalendarDTOAdd.CalendarDate.ToUniversalTime();
+            var startTime = employeeCalendarDTOAdd.StartTime.ToUniversalTime();
+            var endTime = employeeCalendarDTOAdd.EndTime.ToUniversalTime();
 
+            employeeCalendarDTOAdd.CalendarDate = calendarDate;
+            employeeCalendarDTOAdd.StartTime = startTime;
+            employeeCalendarDTOAdd.EndTime = endTime;
 
             EmployeeCalendarDTOAddDB employeeCalendarDTOAddDB = mapper.Map<EmployeeCalendarDTOAddDB>(employeeCalendarDTOAdd);
             employeeCalendarDTOAddDB.CreatedByIpAddress = ipAddress;
@@ -50,9 +53,13 @@ namespace Timesheet.API.Controllers.Master
             string userName = "Admin";
             string ipAddress = "::1";
 
-/*            employeeCalendarDTOEdit.CalendarDate.ToUniversalTime();
-            employeeCalendarDTOEdit.StartTime.ToUniversalTime();
-            employeeCalendarDTOEdit.EndTime.ToUniversalTime();*/
+            var calendarDate = employeeCalendarDTOEdit.CalendarDate.ToUniversalTime();
+            var startTime = employeeCalendarDTOEdit.StartTime.ToUniversalTime();
+            var endTime = employeeCalendarDTOEdit.EndTime.ToUniversalTime();
+
+            employeeCalendarDTOEdit.CalendarDate = calendarDate;
+            employeeCalendarDTOEdit.StartTime = startTime;
+            employeeCalendarDTOEdit.EndTime = endTime;
 
             EmployeeCalendarDTOEditDB employeeCalendarDTOEditDB = mapper.Map<EmployeeCalendarDTOEditDB>(employeeCalendarDTOEdit);
             employeeCalendarDTOEditDB.ModifiedBy = userName;
