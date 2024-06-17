@@ -1,10 +1,17 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using Newtonsoft.Json;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using Timesheet.Models.Masters.EmployeeCalendar;
 using Timesheet.Repository.Interface.Master;
 
 namespace Timesheet.API.Controllers.Master
 {
+
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class EmployeeCalendarController(IEmployeeCalendar employeeCalendar, ILogger<EmployeeCalendarController> logger, IMapper mapper) : ControllerBase
@@ -14,7 +21,7 @@ namespace Timesheet.API.Controllers.Master
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult List()
         {
-            string userName = "Admin";
+            string? userName = User.FindFirst(ClaimTypes.Email)?.Value;
             logger.LogInformation($"Request:User:{userName}");
             var result = employeeCalendar.List(userName);
             return Ok(result);
@@ -25,8 +32,19 @@ namespace Timesheet.API.Controllers.Master
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult Add(EmployeeCalendarDTOAdd employeeCalendarDTOAdd)
         {
-            string userName = "Admin";
-            string ipAddress = "::1";
+            string? userName2 = User.Claims.FirstOrDefault(c => c.Type == "email")?.Value;
+            string? ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+
+            var emailClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "email")?.Value;
+
+            string? userName = User.FindFirst(ClaimTypes.Email)?.Value;
+
+
+            if (string.IsNullOrEmpty(userName))
+            {
+                logger.LogWarning("Username not found in token.");
+                return Unauthorized(); // Or handle as needed
+            }
 
             var calendarDate = employeeCalendarDTOAdd.CalendarDate.ToUniversalTime();
             var startTime = employeeCalendarDTOAdd.StartTime.ToUniversalTime();
@@ -50,8 +68,8 @@ namespace Timesheet.API.Controllers.Master
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult Edit(EmployeeCalendarDTOEdit employeeCalendarDTOEdit)
         {
-            string userName = "Admin";
-            string ipAddress = "::1";
+            string? userName = User.FindFirst(ClaimTypes.Email)?.Value;
+            string? ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
 
             var calendarDate = employeeCalendarDTOEdit.CalendarDate.ToUniversalTime();
             var startTime = employeeCalendarDTOEdit.StartTime.ToUniversalTime();
