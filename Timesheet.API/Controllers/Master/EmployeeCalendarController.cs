@@ -1,11 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Primitives;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
-using Newtonsoft.Json;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 using Timesheet.Models.Masters.EmployeeCalendar;
 using Timesheet.Repository.Interface.Master;
 
@@ -32,10 +27,10 @@ namespace Timesheet.API.Controllers.Master
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult Add(EmployeeCalendarDTOAdd employeeCalendarDTOAdd)
         {
-            string? userName2 = User.Claims.FirstOrDefault(c => c.Type == "email")?.Value;
+            //string? userName2 = User.Claims.FirstOrDefault(c => c.Type == "email")?.Value;
             string? ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
 
-            var emailClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "email")?.Value;
+            //var emailClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "email")?.Value;
 
             string? userName = User.FindFirst(ClaimTypes.Email)?.Value;
 
@@ -46,15 +41,18 @@ namespace Timesheet.API.Controllers.Master
                 return Unauthorized(); // Or handle as needed
             }
 
-            var calendarDate = employeeCalendarDTOAdd.CalendarDate.ToUniversalTime();
-            var startTime = employeeCalendarDTOAdd.StartTime.ToUniversalTime();
-            var endTime = employeeCalendarDTOAdd.EndTime.ToUniversalTime();
+            //var calendarDate = employeeCalendarDTOAdd.StartTime.ToUniversalTime();
+            //var startTime = employeeCalendarDTOAdd.StartTime.ToUniversalTime();
+            //var endTime = employeeCalendarDTOAdd.EndTime.ToUniversalTime();
 
-            employeeCalendarDTOAdd.CalendarDate = calendarDate;
-            employeeCalendarDTOAdd.StartTime = startTime;
-            employeeCalendarDTOAdd.EndTime = endTime;
+            //employeeCalendarDTOAdd.CalendarDate = calendarDate;
+            //employeeCalendarDTOAdd.StartTime = startTime;
+            //employeeCalendarDTOAdd.EndTime = endTime;
 
             EmployeeCalendarDTOAddDB employeeCalendarDTOAddDB = mapper.Map<EmployeeCalendarDTOAddDB>(employeeCalendarDTOAdd);
+            employeeCalendarDTOAdd.CalendarDate = employeeCalendarDTOAdd.CalendarDate.ToLocalTime();
+            employeeCalendarDTOAdd.StartTime = employeeCalendarDTOAdd.StartTime.ToLocalTime();
+            employeeCalendarDTOAdd.EndTime = employeeCalendarDTOAdd.EndTime.ToLocalTime();
             employeeCalendarDTOAddDB.CreatedByIpAddress = ipAddress;
             employeeCalendarDTOAddDB.CreatedBy = userName;
             logger.LogInformation($"|Request Argument: {employeeCalendarDTOAddDB}");
@@ -71,15 +69,18 @@ namespace Timesheet.API.Controllers.Master
             string? userName = User.FindFirst(ClaimTypes.Email)?.Value;
             string? ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
 
-            var calendarDate = employeeCalendarDTOEdit.CalendarDate.ToUniversalTime();
-            var startTime = employeeCalendarDTOEdit.StartTime.ToUniversalTime();
-            var endTime = employeeCalendarDTOEdit.EndTime.ToUniversalTime();
+            //var calendarDate = employeeCalendarDTOEdit.CalendarDate.ToUniversalTime();
+            //var startTime = employeeCalendarDTOEdit.StartTime.ToUniversalTime();
+            //var endTime = employeeCalendarDTOEdit.EndTime.ToUniversalTime();
 
-            employeeCalendarDTOEdit.CalendarDate = calendarDate;
-            employeeCalendarDTOEdit.StartTime = startTime;
-            employeeCalendarDTOEdit.EndTime = endTime;
+            //employeeCalendarDTOEdit.CalendarDate = calendarDate;
+            //employeeCalendarDTOEdit.StartTime = startTime;
+            //employeeCalendarDTOEdit.EndTime = endTime;
 
             EmployeeCalendarDTOEditDB employeeCalendarDTOEditDB = mapper.Map<EmployeeCalendarDTOEditDB>(employeeCalendarDTOEdit);
+            employeeCalendarDTOEdit.CalendarDate = employeeCalendarDTOEdit.CalendarDate.ToLocalTime();
+            employeeCalendarDTOEdit.StartTime = employeeCalendarDTOEdit.StartTime.ToLocalTime();
+            employeeCalendarDTOEdit.EndTime = employeeCalendarDTOEdit.EndTime.ToLocalTime();
             employeeCalendarDTOEditDB.ModifiedBy = userName;
             employeeCalendarDTOEditDB.ModifiedByIpAddress = ipAddress;
             logger.LogInformation($"|Request Argument: {employeeCalendarDTOEditDB}");
@@ -94,8 +95,8 @@ namespace Timesheet.API.Controllers.Master
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult Detail(int employeeCalendarId)
         {
-            string userName = "Admin";
-            string ipAddress = "::1";
+            string? userName = User.FindFirst(ClaimTypes.Email)?.Value;
+            string? ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
 
             logger.LogInformation($"Request: User:{userName}, IP:{ipAddress}, EmployeeCalendarId: {employeeCalendarId}");
             var result = employeeCalendar.Detail(employeeCalendarId, userName);
@@ -108,19 +109,21 @@ namespace Timesheet.API.Controllers.Master
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult DeletedList()
         {
-            string userName = "Admin";
+            string? userName = User.FindFirst(ClaimTypes.Email)?.Value;
+            string? ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
             logger.LogInformation($"|Request: User: {userName}");
             var result = employeeCalendar.DeletedList(userName);
             return Ok(result);
         }
 
         [HttpPost]
+        [Route("{employeeCalendarId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult Delete(int employeeCalendarId)
         {
-            string userName = "Admin";
-            string ipAddress = "::1";
+            string? userName = User.FindFirst(ClaimTypes.Email)?.Value;
+            string? ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
 
             logger.LogInformation($"|Request User: {userName}, IP:{ipAddress}, Employee Calendar Id:{employeeCalendarId}");
             var result = employeeCalendar.Delete(employeeCalendarId, userName, ipAddress);
@@ -134,8 +137,8 @@ namespace Timesheet.API.Controllers.Master
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult ChangeLog_GetById(int employeeCalendarId)
         {
-            string userName = "Admin";
-            string ipAddress = "::1";
+            string? userName = User.FindFirst(ClaimTypes.Email)?.Value;
+            string? ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
 
             logger.LogInformation($"Request User: {userName}, IP: {ipAddress}, Employee Calendar Id: {employeeCalendarId}");
             var result = employeeCalendar.ChangeLog_GetById(employeeCalendarId, userName);

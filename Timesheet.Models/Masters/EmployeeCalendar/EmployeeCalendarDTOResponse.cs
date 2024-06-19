@@ -34,8 +34,8 @@ namespace Timesheet.Models.Masters.EmployeeCalendar
         public int WorkTypeId { get; set; }
         public string WorkType { get; set; }
         public string Title { get; set; }
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
+        public DateTime Start { get; set; }
+        public DateTime End { get; set; }
         public int TotalTime { get; set; }
         public string Description { get; set; }
         public override string ToString()
