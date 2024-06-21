@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json;
 using Timesheet.Models.Common;
 
-namespace Timesheet.Models.Masters.Employee
+namespace Timesheet.Models.Auth
 {
-    public class EmployeeDeletedDTOResponse
+    public class RoleDTOResponse
     {
         public DataUpdateResponse? DataUpdateResponse { get; set; }
-        public List<EmployeeDTOList>? EmployeeDeletedList { get; set; }
 
+        public List<RoleResponse>? RoleList { get; set; }
         public override string ToString()
         {
             if (this.DataUpdateResponse == null)
@@ -23,8 +19,19 @@ namespace Timesheet.Models.Masters.Employee
             {
                 return status;
             }
-            status += $"Deleted Employee List Count:{this.EmployeeDeletedList?.Count}";
+            status += $"Role List Count:{this.RoleList?.Count}";
             return status;
+        }
+
+    }
+
+    public class RoleResponse
+    {
+        public string UserName { get; set; }
+        public string Name { get; set; }
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
         }
     }
 }
