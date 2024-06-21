@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using Timesheet.Models.Masters.Employee;
 using Timesheet.Repository.Interface.Master;
 
@@ -28,7 +29,7 @@ namespace Timesheet.API.Controllers.Master
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult List()
         {
-            string userName = "Admin";
+            string? userName = User.FindFirst(ClaimTypes.Email)?.Value;
             Logger.LogInformation($"|Request:User:{userName}");
             var result = Employee.List(userName);
             Logger.LogInformation($"|Result: {result}");
@@ -40,10 +41,10 @@ namespace Timesheet.API.Controllers.Master
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult Add(EmployeeDTOAdd employeeDTOAdd)
         {
-            string userName = "Admin";
-            string iPAddress = "::1";
+            string? userName = User.FindFirst(ClaimTypes.Email)?.Value;
+            string? ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
             EmployeeDTOAddDB employeeDTOAddDB = Mapper.Map<EmployeeDTOAddDB>(employeeDTOAdd);
-            employeeDTOAddDB.CreatedByIpAddress = iPAddress;
+            employeeDTOAddDB.CreatedByIpAddress = ipAddress;
             employeeDTOAddDB.CreatedBy = userName;
             Logger.LogInformation($"|Request Argument:{employeeDTOAddDB}");
             var result = Employee.Add(employeeDTOAddDB);
@@ -57,8 +58,8 @@ namespace Timesheet.API.Controllers.Master
 
         public IActionResult Edit(EmployeeDTOEdit employeeDTOEdit)
         {
-            string userName = "Admin";
-            string ipAddress = "::1";
+            string? userName = User.FindFirst(ClaimTypes.Email)?.Value;
+            string? ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
             EmployeeDTOEditDB employeeDTOEditDB = Mapper.Map<EmployeeDTOEditDB>(employeeDTOEdit);
             employeeDTOEditDB.ModifiedByIpAddress = ipAddress;
             employeeDTOEditDB.ModifiedBy = userName;
@@ -74,8 +75,8 @@ namespace Timesheet.API.Controllers.Master
 
         public IActionResult Delete(int employeeId)
         {
-            string userName = "Admin";
-            string ipAddress = "::1";
+            string? userName = User.FindFirst(ClaimTypes.Email)?.Value;
+            string? ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
             Logger.LogInformation($"|Request User:{userName}, IP:{ipAddress}, EmployeeId:{employeeId}");
             var result = Employee.Delete(employeeId, userName, ipAddress);
             Logger.LogInformation($"|Result: {result}");
@@ -89,8 +90,8 @@ namespace Timesheet.API.Controllers.Master
 
         public IActionResult Detail(int employeeId)
         {
-            string userName = "Admin";
-            string ipAddress = "::1";
+            string? userName = User.FindFirst(ClaimTypes.Email)?.Value;
+            string? ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
             Logger.LogInformation($"|Request: User:{userName},IP:{ipAddress}, EmployeeId:{employeeId}");
             var result = Employee.Detail(employeeId, userName);
             Logger.LogInformation($"|Result: {result}");
@@ -104,8 +105,8 @@ namespace Timesheet.API.Controllers.Master
 
         public IActionResult ChangeLog_GetById(int employeeId)
         {
-            string userName = "Admin";
-            string ipAddress = "::1";
+            string? userName = User.FindFirst(ClaimTypes.Email)?.Value;
+            string? ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
             Logger.LogInformation($"|Request: User:{userName}, IP:{ipAddress}, EmployeeId:{employeeId}");
             var result = Employee.ChangeLog_GetById(employeeId, userName);
             Logger.LogInformation($"|Result: {result}");
