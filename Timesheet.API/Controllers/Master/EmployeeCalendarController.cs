@@ -27,11 +27,11 @@ namespace Timesheet.API.Controllers.Master
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult Add(EmployeeCalendarDTOAdd employeeCalendarDTOAdd)
         {
-            //string? userName2 = User.Claims.FirstOrDefault(c => c.Type == "email")?.Value;
-            string? ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
-
             //var emailClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "email")?.Value;
 
+            //string? userName2 = User.Claims.FirstOrDefault(c => c.Type == "email")?.Value;
+
+            string? ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
             string? userName = User.FindFirst(ClaimTypes.Email)?.Value;
 
 

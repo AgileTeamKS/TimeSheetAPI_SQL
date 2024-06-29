@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Security.Claims;
 using Timesheet.Models.Masters.Lookup;
 using Timesheet.Repository.Interface.Master;
 
@@ -19,7 +20,15 @@ namespace Timesheet.API.Controllers.Master
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult List()
         {
-            string userName = "Admin";
+            string? userName = User.FindFirst(ClaimTypes.Email)?.Value;
+
+
+            if (string.IsNullOrEmpty(userName))
+            {
+                logger.LogWarning("Username not found in token.");
+                return Unauthorized(); // Or handle as needed
+            }
+
             logger.LogInformation($"Request:User:{userName}");
             var result = lookup.List(userName);
             return Ok(result);
@@ -30,8 +39,15 @@ namespace Timesheet.API.Controllers.Master
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult Add(LookupDTOAdd lookupDTOAdd)
         {
-            string userName = "Admin";
-            string ipAddress = "::1";
+            string? ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+            string? userName = User.FindFirst(ClaimTypes.Email)?.Value;
+
+
+            if (string.IsNullOrEmpty(userName))
+            {
+                logger.LogWarning("Username not found in token.");
+                return Unauthorized(); // Or handle as needed
+            }
 
             LookupDTOAddDB lookupDTOAddDB = mapper.Map<LookupDTOAddDB>(lookupDTOAdd);
             lookupDTOAddDB.CreatedByIpAddress = ipAddress;
@@ -47,8 +63,16 @@ namespace Timesheet.API.Controllers.Master
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult Edit(LookupDTOEdit lookupDTOEdit)
         {
-            string userName = "Admin";
-            string ipAddress = "::1";
+            string? ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+            string? userName = User.FindFirst(ClaimTypes.Email)?.Value;
+
+
+            if (string.IsNullOrEmpty(userName))
+            {
+                logger.LogWarning("Username not found in token.");
+                return Unauthorized(); // Or handle as needed
+            }
+
             LookupDTOEditDB lookupDTOEditDB = mapper.Map<LookupDTOEditDB>(lookupDTOEdit);
             lookupDTOEditDB.ModifiedByIpAddress = ipAddress;
             lookupDTOEditDB.ModifiedBy = userName;
@@ -64,8 +88,16 @@ namespace Timesheet.API.Controllers.Master
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult Detail(int lookupId)
         {
-            string userName = "Admin";
-            string ipAddress = "::1";
+            string? ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+            string? userName = User.FindFirst(ClaimTypes.Email)?.Value;
+
+
+            if (string.IsNullOrEmpty(userName))
+            {
+                logger.LogWarning("Username not found in token.");
+                return Unauthorized(); // Or handle as needed
+            }
+
             logger.LogInformation($"|Request: User:{userName}, IP:{ipAddress}, LookupId: {lookupId}");
             var result = lookup.Detail(lookupId, userName);
             logger.LogInformation($"|Result: {result}");
@@ -77,7 +109,15 @@ namespace Timesheet.API.Controllers.Master
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult DeletedList()
         {
-            string userName = "Admin";
+            string? userName = User.FindFirst(ClaimTypes.Email)?.Value;
+
+
+            if (string.IsNullOrEmpty(userName))
+            {
+                logger.LogWarning("Username not found in token.");
+                return Unauthorized(); // Or handle as needed
+            }
+
             logger.LogInformation($"|Request: User:{userName}");
             var result = lookup.DeletedList(userName);
             return Ok(result);
@@ -89,8 +129,15 @@ namespace Timesheet.API.Controllers.Master
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult LookupGetByTagName(string tagName)
         {
-            string userName = "Admin";
-            string ipAddress = "::1";
+            string? ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+            string? userName = User.FindFirst(ClaimTypes.Email)?.Value;
+
+
+            if (string.IsNullOrEmpty(userName))
+            {
+                logger.LogWarning("Username not found in token.");
+                return Unauthorized(); // Or handle as needed
+            }
 
             logger.LogInformation($"|Request: User:{userName}, IP:{ipAddress}, TagName: {tagName}");
             var result = lookup.LookupGetByTagName(tagName, userName);
