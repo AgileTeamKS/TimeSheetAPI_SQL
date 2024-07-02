@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Timesheet.Models.Common;
+using Timesheet.Models.Masters.ClientContact;
 
 namespace Timesheet.Models.Masters.Client
 {
@@ -7,6 +8,7 @@ namespace Timesheet.Models.Masters.Client
     {
         public DataUpdateResponse? DataUpdateResponse { get; set; }
         public ClientDTODetail? ClientDetail { get; set; }
+        public List<ClientContactDTOList>? ClientContactList { get; set; }
         public override string ToString()
         {
             if(this.DataUpdateResponse == null)
@@ -18,7 +20,7 @@ namespace Timesheet.Models.Masters.Client
             {
                 return status;
             }
-            status += $"Client Details here: {this.ClientDetail}";
+            status += $"Client Details here: {this.ClientDetail}, Contact Details here: {this.ClientContactList?.Count}";
             return status;
         }
     }

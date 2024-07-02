@@ -5,7 +5,7 @@ namespace Timesheet.Models.Masters.ClientContact
     public class ClientContactDeletedDTOResponse
     {
         public DataUpdateResponse? DataUpdateResponse { get; set; }
-        public List<ClientContactDTOList>? ClientDeletedList { get; set; }
+        public List<ClientContactDTOList>? ClientContactDeletedList { get; set; }
         public override string ToString()
         {
             if(this.DataUpdateResponse == null)
@@ -17,7 +17,7 @@ namespace Timesheet.Models.Masters.ClientContact
             {
                 return status;
             }
-            status += $"Client Deleted List: {ClientDeletedList?.Count}";
+            status += $"Client Deleted List: {ClientContactDeletedList?.Count}";
             return status;
         }
     }
