@@ -1,7 +1,11 @@
 using AutoMapper;
+using Timesheet.Models.Masters.Client;
+using Timesheet.Models.Masters.ClientContact;
 using Timesheet.Models.Masters.Employee;
 using Timesheet.Models.Masters.EmployeeCalendar;
 using Timesheet.Models.Masters.Lookup;
+using Timesheet.Models.Masters.Project;
+using Timesheet.Models.Masters.ProjectClientContact;
 
 namespace Timesheet.API.AutoMapperProfile
 {
@@ -15,6 +19,14 @@ namespace Timesheet.API.AutoMapperProfile
             CreateMap<LookupDTOEdit, LookupDTOEditDB>();
             CreateMap<EmployeeCalendarDTOAdd, EmployeeCalendarDTOAddDB>();
             CreateMap<EmployeeCalendarDTOEdit, EmployeeCalendarDTOEditDB>();
+            CreateMap<ClientDTOAdd, ClientDTOAddDB>();
+            CreateMap<ClientDTOEdit, ClientDTOEditDB>();
+            CreateMap<ClientContactDTOAdd, ClientContactDTOAddDB>();
+            CreateMap<ClientContactDTOEdit, ClientContactDTOEditDB>();
+            CreateMap<ProjectDTOAdd, ProjectDTOAddDB>();
+            CreateMap<ProjectDTOEdit, ProjectDTOEditDB>();
+            CreateMap<ProjectClientContactDTOAdd, ProjectClientContactDTOAddDB>();
+            CreateMap<ProjectClientContactDTOEdit, ProjectClientContactDTOEditDB>();
         }
     }
 }

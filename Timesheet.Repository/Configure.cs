@@ -17,6 +17,10 @@ namespace Timesheet.Repository
             services.AddScoped<ILookup, LookupRepository>();
             services.AddScoped<IEmployeeCalendar, EmployeeCalendarRepository>();
             services.AddScoped<ICalendar, CalendarRepository>();
+            services.AddScoped<IClient, ClientRepository>();
+            services.AddScoped<IClientContact, ClientContactRepository>();
+            services.AddScoped<IProject, ProjectRepository>();
+            services.AddScoped<IProjectClientContact, ProjectClientContactRepository>();
         }
     }
 }

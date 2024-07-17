@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using Timesheet.Repository.Interface.Master;
 
 namespace Timesheet.API.Controllers.Master
@@ -13,7 +14,7 @@ namespace Timesheet.API.Controllers.Master
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult List()
         {
-            string userName = "Admin";
+            string? userName = User.FindFirst(ClaimTypes.Email)?.Value;
             logger.LogInformation($"Request:User:{userName}");
             var result = calendar.List(userName);
             return Ok(result);
